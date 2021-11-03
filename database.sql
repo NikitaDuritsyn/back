@@ -55,7 +55,7 @@ create TABLE reviewsStatic(
     name VARCHAR(255) DEFAULT 'NULL',
     lastname VARCHAR(255) DEFAULT 'NULL',
     date VARCHAR(255) DEFAULT 'NULL',
-    description text DEFAULT 'NULL',
+    description text DEFAULT 'NULL', -- Сделать ограничение на 300 символов
     grade NUMERIC
 );
 
