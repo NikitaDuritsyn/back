@@ -2,6 +2,8 @@ create TABLE person(
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
+    -- UNIQUE - свойство которое делает поле уникальным во всем столбце таблицы
+    -- Email CHARACTER VARYING(30) UNIQUE, как пример. Нужно сделать с мыслом
     email VARCHAR(255) NOT NULL,
     password text NOT NULL,
     salt text,
