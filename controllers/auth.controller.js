@@ -10,6 +10,13 @@
 
 const db = require('../db.js')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const {secret} = require('./config')
+
+const generateAccessToken = (id, email) => {
+    const payload = { id, email }
+    return jwt.sign(payload, secret, {expiresIn: "12h"})
+}
 
 class aythController {
     // async registration(req, res){
@@ -26,7 +33,21 @@ class aythController {
     // }
     async login(req,res){
         try{
-            
+            const {email, password} = req.body
+            const persone = await db.query(`SELECT * FROM person where email = $1`, [email])
+            // console.log({persone});
+            if(!persone.rows[0]){
+                return res.status(400).json({massage: `Пользователь с таким email - ${email} не найден`})
+            }
+            const validPassword = bcrypt.compareSync(password, persone.rows[0].password);
+            if(!validPassword){
+                return res.status(400).json({massage: `Введен не верный пароль`})
+            }
+            // console.log(persone.rows[0].id, persone.rows[0].email);
+
+            const token = generateAccessToken(persone.rows[0].id, persone.rows[0].email)
+            return res.json({token})
+
         }catch(e){
             console.log(e);
             res.status(400).json({message: "login error"})
