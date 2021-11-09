@@ -51,16 +51,21 @@ class productController{
     }
     async deleteAllProducts(req, res){
         try{
+            const deleteAllProducts = await db.query(`DELETE FROM products`)
             // const products = await db.query(`SELECT * FROM products`)
-            res.json(products.rows)
+            res.json(deleteAllProducts.rows)
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
         }
     }
     async deleteOneProduct(req, res){
         try{
+            
+            const productsId = req.params.id
+            const products = await db.query(`DELETE FROM products where id = $1`, [productsId])
             // const products = await db.query(`SELECT * FROM products`)
-            res.json(products.rows)
+            res.json(`Product deleted. ProductsId :${productsId}`)
+            // const products = await db.query(`SELECT * FROM products`)
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
         }
