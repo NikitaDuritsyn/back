@@ -1,15 +1,15 @@
+    -- UNIQUE - свойство которое делает поле уникальным во всем столбце таблицы
+    -- Email CHARACTER VARYING(30) UNIQUE, как пример. Нужно сделать с мыслом
 create TABLE person(
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
-    -- UNIQUE - свойство которое делает поле уникальным во всем столбце таблицы
-    -- Email CHARACTER VARYING(30) UNIQUE, как пример. Нужно сделать с мыслом
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password text NOT NULL,
     salt text,
     phone VARCHAR(20) NOT NULL,
     token text,
-    role VARCHAR(50) NOT NULL
+    role VARCHAR(50) DEFAULT 'user'
 );
 create TABLE orders(
     id SERIAL PRIMARY KEY,

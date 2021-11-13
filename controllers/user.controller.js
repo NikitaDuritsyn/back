@@ -1,24 +1,23 @@
 const db = require('../db.js')
-const bcrypt = require('bcrypt');
-const {validationResult} = require('express-validator')
+// const bcrypt = require('bcrypt');
+// const {validationResult} = require('express-validator')
 
 class UserController{
-    async createUser(req, res){
-        try{
-            const errors = validationResult(req);
-            if(!errors.isEmpty()) {
-                res.status(400).json({message: "Ошибки при регистрации", errors: errors.array()})
-            }
-            const {name, lastname, email, password, phone, role} = req.body;
-            const hashPassword = bcrypt.hashSync(password, 7);
-            const newPersone = await db.query(`INSERT INTO person (name, lastname, email, password, phone, role) values ($1, $2, $3, $4, $5, $6) RETURNING *`, [name, lastname, email, hashPassword, phone, role])
-            res.json(newPersone.rows[0])
-        }catch(e){
-            console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
-            res.status(400).json({message: "registration error"})
-
-        }
-    }
+    // async createUser(req, res){
+    //     try{
+    //         const errors = validationResult(req);
+    //         if(!errors.isEmpty()) {
+    //             res.status(400).json({message: "Ошибки при регистрации", errors: errors.array()})
+    //         }
+    //         const {name, lastname, email, password, phone, role} = req.body;
+    //         const hashPassword = bcrypt.hashSync(password, 7);
+    //         const newPersone = await db.query(`INSERT INTO person (name, lastname, email, password, phone, role) values ($1, $2, $3, $4, $5, $6) RETURNING *`, [name, lastname, email, hashPassword, phone, role])
+    //         res.json(newPersone.rows[0])
+    //     }catch(e){
+    //         console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
+    //         res.status(400).json({message: "registration error"})
+    //     }
+    // }
     async getUser(req, res){
         try{
             const users = await db.query(`SELECT * FROM person`)
