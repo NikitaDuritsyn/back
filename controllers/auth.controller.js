@@ -34,7 +34,9 @@ class aythController {
             // console.log(persone.rows[0].id, persone.rows[0].email);
 
             const token = generateAccessToken(persone.rows[0].id, persone.rows[0].role)
+            // console.log({token});
             return res.json({token})
+            
 
         }catch(e){
             console.log(e);
