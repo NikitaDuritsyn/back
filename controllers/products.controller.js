@@ -3,8 +3,8 @@ const db = require('../db.js')
 class productController{
     async createProduct(req, res){
         try{
-            const {type, title, titleTwo, descriptionMaterial, descriptionAdvantages, price, urlImage} = req.body;
-            const newProduct = await db.query(`INSERT INTO products (type, title, titleTwo, descriptionMaterial, descriptionAdvantages, price, urlImage) values ($1, $2, $3, $4, $5, $6, $7) RETURNING *`, [type, title, titleTwo, descriptionMaterial, descriptionAdvantages, price, urlImage])
+            const {type, title, titletwo, descriptionmaterial, descriptionadvantages, price, urlimage} = req.body;
+            const newProduct = await db.query(`INSERT INTO products (type, title, titleTwo, descriptionMaterial, descriptionAdvantages, price, urlImage) values ($1, $2, $3, $4, $5, $6, $7) RETURNING *`, [type, title, titletwo, descriptionmaterial, descriptionadvantages, price, urlimage])
             res.json(newProduct.rows[0])
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
@@ -20,31 +20,21 @@ class productController{
     }
     async getProductByParametr(req, res){
         try{
+            // Тут по типу товара будет искать
             const parametr = req.params.parametr
-            const products = await db.query(`SELECT * FROM products where title = $1`, [parametr])
-            //??? Тут не верно Так что нужно будет переделывать
-            // Сделать цыкл по массиву products.rows Поиск по параметру и потом прировнять к самому себе, 
-            //вот так вот примерно А брать с BD Все товары
-            res.json(products.rows[0])
+            const products = await db.query(`SELECT * FROM products where type = $1`, [parametr])
+            res.json(products.rows)
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
         }
     }
     async updateThisProduct(req, res){
         try{
-            const parametr = req.params.id
-            // Добавить и в USER тоже условие если пусто то не меняем этот параметр
-            // Взять массив по id потом провести манипуляци с полями и занести его в базу по новой.
-            // Сначала select по id 
-            // потом products.rows == новым параметрам при условии что в том параметре что-то етсь
-            // Затем новые поля вносим UPDATE
-            // ПОКА ТУТ И В ПОЛЬЗОВАТЕЛЯХ НЕ ВЕРНО !!!!
-
-            // либо - что проще сделать так чтобы на фронте передалвались все поля пользователя в форму редактирования (как id)
-            // Это реализованно в проекте по корнилову
-
-            const products = await db.query(`SELECT * FROM products where id = $1`, [id])
-            res.json(products.rows)
+            const productId = req.params.id
+            const {type, title, titletwo, descriptionmaterial, descriptionadvantages, price, urlimage} = req.body
+            await db.query(`UPDATE products set type = $1, title = $2, titletwo = $3, descriptionmaterial = $4, descriptionadvantages = $5, price= $6, urlimage = $7 where id = $8 RETURNING *`, [type, title, titletwo, descriptionmaterial, descriptionadvantages, price, urlimage, productId])
+            const productsNew = await db.query(`SELECT * FROM products`)
+            res.json(productsNew.rows)
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
         }
@@ -60,11 +50,11 @@ class productController{
     }
     async deleteOneProduct(req, res){
         try{
-            
             const productsId = req.params.id
-            const products = await db.query(`DELETE FROM products where id = $1`, [productsId])
-            // const products = await db.query(`SELECT * FROM products`)
-            res.json(`Product deleted. ProductsId :${productsId}`)
+            await db.query(`DELETE FROM products where id = $1`, [productsId])
+            const productsNew = await db.query(`SELECT * FROM products`)
+            res.json(productsNew.rows)
+            // res.json(`Product deleted. ProductsId :${productsId}`)
             // const products = await db.query(`SELECT * FROM products`)
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
