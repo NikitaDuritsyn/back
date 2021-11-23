@@ -15,4 +15,8 @@ router.post('/registration',[
     check('password', 'Пароль не должен быть меньше 4 и больше 12 символов').isLength({min:4,max:12}),
     check('email', "your custom error message").isEmail().normalizeEmail(),], authController.registration)
 
+router.post('/logout', authController.logout)
+router.get('/activate/:link', authController.activate)
+router.get('/refresh', authController.refresh)
+
 module.exports = router

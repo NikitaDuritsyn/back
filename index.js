@@ -1,5 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
+const cookieParser = require('cookie-parser') //добавил  cookie-parser в проект
 
 const userRouter = require('./routes/user.routes.js')
 const ordersRouter = require('./routes/orders.routes.js')
@@ -21,4 +23,13 @@ app.use('/api', productsRouter)
 app.use('/api', reviewsRouter)
 app.use('/api', authRouter)
 
-app.listen(PORT, () => console.log(`server started on port http://localhost:${PORT}`))
+const start = async () => {
+    try{
+        app.listen(PORT, () => console.log(`server started on port http://localhost:${PORT}`))
+
+    }catch(e){
+        console.log(e);
+    }
+}
+
+start()

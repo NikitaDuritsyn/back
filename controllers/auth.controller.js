@@ -23,7 +23,6 @@ class aythController {
         try{
             const {email, password} = req.body
             const persone = await db.query(`SELECT * FROM person where email = $1`, [email])
-            // console.log({persone});
             if(!persone.rows[0]){
                 return res.status(400).json({massage: `Пользователь с таким email - ${email} не найден`})
             }
@@ -31,39 +30,59 @@ class aythController {
             if(!validPassword){
                 return res.status(400).json({massage: `Введен не верный пароль`})
             }
-            // console.log(persone.rows[0].id, persone.rows[0].email);
-
             const token = generateAccessToken(persone.rows[0].id, persone.rows[0].role)
-            // console.log({token});
             return res.json({token})
-            
-
         }catch(e){
             console.log(e);
             res.status(400).json({message: "login error"})
         }
     }
+
     async registration(req, res){
         try{
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
                 res.status(400).json({message: "Ошибки при регистрации", errors: errors.array()})
-                // console.log({message: "Ошибки при регистрации", errors: errors.array()});
-
             }else{
                 const {name, lastname, email, password, phone, role} = req.body;
-                const hashPassword = bcrypt.hashSync(password, 7);
-                const newPersone = await db.query(`INSERT INTO person (name, lastname, email, password, phone, role) values ($1, $2, $3, $4, $5, $6) RETURNING *`, [name, lastname, email, hashPassword, phone, role])
-                res.json(newPersone.rows[0])
+                const persone = await db.query(`SELECT * FROM person where email = $1`, [email])
+                if(!persone.rows[0]){
+                    const hashPassword = bcrypt.hashSync(password, 7);
+                    const newPersone = await db.query(`INSERT INTO person (name, lastname, email, password, phone, role) values ($1, $2, $3, $4, $5, $6) RETURNING *`, [name, lastname, email, hashPassword, phone, role])
+                    res.json(newPersone.rows[0])
+                }else{
+                    res.status(400).json({message: `Пользователь ${email} уже зарегестрирован`})
+                }
             }
         }catch(e){
             console.log('Ошибка ' + e.name + ":\n " + e.message + "\n\n" + e.stack);
             res.status(400).json({message: "registration error"})
+        }
+    }
+    
+    async logout (req, res, next){
+        try{
+            
+        }catch(e){
+
+        }
+    }
+
+    async activate (req, res, next){
+        try{
+
+        }catch(e){
+
+        }
+    }
+
+    async refresh (req, res, next){
+        try{
+
+        }catch(e){
 
         }
     }
 }
 
 module.exports = new aythController()
-
-

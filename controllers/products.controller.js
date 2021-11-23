@@ -21,6 +21,8 @@ class productController{
     async getProductByParametr(req, res){
         try{
             // Тут по типу товара будет искать
+            // console.log(req.params);
+
             const parametr = req.params.parametr
             const products = await db.query(`SELECT * FROM products where type = $1`, [parametr])
             res.json(products.rows)
@@ -54,6 +56,7 @@ class productController{
             await db.query(`DELETE FROM products where id = $1`, [productsId])
             const productsNew = await db.query(`SELECT * FROM products`)
             res.json(productsNew.rows)
+
             // res.json(`Product deleted. ProductsId :${productsId}`)
             // const products = await db.query(`SELECT * FROM products`)
         }catch(e){
