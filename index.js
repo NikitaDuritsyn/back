@@ -26,10 +26,8 @@ app.use('/api', authRouter)
 const start = async () => {
     try{
         app.listen(PORT, () => console.log(`server started on port http://localhost:${PORT}`))
-
     }catch(e){
         console.log(e);
     }
 }
-
 start()
